@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Random Facts — Colourful</title>
+  <meta name="description" content="A colorful page that shows interesting random facts with images." />
+  <style>
+    :root{
+      --bg1:#ff9a9e;
+      --bg2:#fad0c4;
+      --card:#ffffffcc;
+      --accent1:#6a11cb;
+      --accent2:#2575fc;
+      --btn-text:#fff;
+      --glass: rgba(255,255,255,0.18);
+    }
+    html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,system-ui,-apple-system,"Helvetica Neue",Arial;color:#1a1a1a}
+    body{
+      background: linear-gradient(135deg,var(--bg1),var(--bg2));
+      display:flex;align-items:center;justify-content:center;padding:40px;
+    }
+    .wrap{
+      width:100%;max-width:960px;background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.75));border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.12);overflow:hidden;display:grid;grid-template-columns:1fr 420px;gap:0;
+    }
+    .main{
+      padding:40px;display:flex;flex-direction:column;gap:20px;align-items:flex-start;justify-content:center;
+    }
+    h1{margin:0;font-size:2rem;line-height:1.05;color:#222}
+    p.lead{margin:0;color:#333;opacity:0.9}
+    .fact-card{
+      margin-top:8px;padding:22px;border-radius:14px;background:var(--card);width:100%;box-shadow:0 6px 18px rgba(0,0,0,0.06);display:flex;gap:18px;align-items:flex-start;transition:transform 300ms cubic-bezier(.2,.9,.3,1);
+    }
+    .fact-card:hover{transform:translateY(-4px)}
+    .fact-text{flex:1}
+    .fact-text p{margin:0;font-size:1.125rem}
+    .controls{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+    .btn{
+      -webkit-tap-highlight-color: transparent;
+      border:0;padding:12px 16px;border-radius:12px;color:var(--btn-text);cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,0.12);transition:transform 140ms ease,box-shadow 140ms ease;
+    }
+    .btn:active{transform:translateY(1px);}
+    .primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));}
+    .secondary{background:linear-gradient(90deg,#ffd36b,#ff7aa2);color:#111}
+    .muted{background:var(--glass);color:#111;border:1px solid rgba(255,255,255,0.45)}
+
+    .sidebar{
+      background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));padding:20px;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;min-height:100%;
+    }
+    .image-wrap{width:100%;height:280px;border-radius:12px;overflow:hidden;background:#eee;display:flex;align-items:center;justify-content:center}
+    .image-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+    .meta{font-size:0.9rem;color:#111;opacity:0.85;text-align:center}
+    .footer{margin-top:8px;font-size:0.85rem;color:#111;opacity:0.7;text-align:center}
+
+    .fade-enter{opacity:0;transform:translateY(8px)}
+    .fade-enter-active{opacity:1;transform:none;transition:all 420ms cubic-bezier(.2,.9,.3,1)}
+
+    @media(max-width:880px){
+      .wrap{grid-template-columns:1fr;}
+      .sidebar{order:-1}
+      .image-wrap{height:220px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <div class="main">
+      <h1>Fun & Interesting Random Facts</h1>
+      <p class="lead">Click the button to show a new random fact — each fact has a curated image and colourful buttons to match the vibe.</p>
+
+      <div id="fact" class="fact-card" aria-live="polite">
+        <div class="fact-text">
+          <p id="fact-text">Loading a fun fact...</p>
+          <div class="footer" id="fact-source"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="newBtn" class="btn primary">Show another fact</button>
+        <button id="surpriseBtn" class="btn secondary">Surprise me (random image)</button>
+        <button id="shareBtn" class="btn muted">Copy share link</button>
+      </div>
+
+      <p style="margin-top:12px;font-size:0.9rem;opacity:0.85">Tip: Use the buttons or press spacebar to get a new fact.</p>
+    </div>
+
+    <aside class="sidebar">
+      <div class="image-wrap" id="imageWrap">
+        <img id="fact-img" src="https://images.unsplash.com/photo-1523978591478-c753949ff840?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Fact image"/>
+      </div>
+      <div class="meta">Colorful backgrounds • Bright buttons • Responsive layout</div>
+      <div class="meta" style="font-size:0.82rem;opacity:0.8">Built for playboinazer/My-repo</div>
+    </aside>
+  </div>
+
+  <script>
+    // Example facts array. You can extend or replace this with a JSON file or API later.
+    const facts = [
+      { text: "Honey never spoils — archaeologists have found edible honey in ancient Egyptian tombs over 3,000 years old.", tag: "history", image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200&auto=format&fit=crop" },
+      { text: "Octopuses have three hearts and blue blood.", tag: "nature", image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop" },
+      { text: "Bananas are berries, but strawberries aren't.", tag: "food", image: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop" },
+      { text: "There are more possible iterations of a game of chess than atoms in the known universe (it's estimated).", tag: "games", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop" },
+      { text: "A day on Venus is longer than a year on Venus — it rotates very slowly compared to its orbit around the Sun.", tag: "space", image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1200&auto=format&fit=crop" },
+      { text: "Wombat poop is cube-shaped — this helps it not to roll away when marking territory.", tag: "animals", image: "https://images.unsplash.com/photo-1535930749574-1399327ce78f?q=80&w=1200&auto=format&fit=crop" },
+      { text: "A single strand of spaghetti is called a 'spaghetto'.", tag: "language", image: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1200&auto=format&fit=crop" },
+      { text: "Cleopatra lived closer in time to the Moon landing than to the building of the Great Pyramid of Giza.", tag: "history", image: "https://images.unsplash.com/photo-1507120410856-1f35574c3b45?q=80&w=1200&auto=format&fit=crop" }
+    ];
+
+    const factText = document.getElementById('fact-text');
+    const factImg = document.getElementById('fact-img');
+    const factSource = document.getElementById('fact-source');
+    const newBtn = document.getElementById('newBtn');
+    const surpriseBtn = document.getElementById('surpriseBtn');
+    const shareBtn = document.getElementById('shareBtn');
+
+    // Utility: pick index based on optional seed (to support link sharing later)
+    function getRandomIndex(seed) {
+      if (typeof seed === 'number') return seed % facts.length;
+      return Math.floor(Math.random() * facts.length);
+    }
+
+    function showFact(idx, useRandomImage=false){
+      const i = (typeof idx === 'number') ? idx : getRandomIndex();
+      const fact = facts[i];
+      // fade-out, change, fade-in
+      factText.classList.add('fade-enter');
+      setTimeout(()=>{
+        factText.textContent = fact.text;
+        factSource.textContent = fact.tag ? 'Tag: ' + fact.tag : '';
+        // choose image: either the fact's image or a surprise image
+        if(useRandomImage){
+          // get a random Unsplash image based on the tag or a general query
+          const query = encodeURIComponent(fact.tag || 'abstract');
+          factImg.src = `https://source.unsplash.com/collection/190727/${800}x${600}?${query}`; // collection for stable abstract images
+        } else {
+          factImg.src = fact.image + '&s=1';
+        }
+        // ensure alt text is helpful
+        factImg.alt = (fact.tag ? fact.tag + ' image' : 'Illustration');
+        // animate back in
+        requestAnimationFrame(()=>factText.classList.remove('fade-enter'));
+      }, 160);
+
+      // update URL hash so sharing works
+      const url = new URL(window.location.href);
+      url.hash = 'fact=' + i + (useRandomImage ? '&r=1' : '');
+      history.replaceState(null, '', url);
+    }
+
+    // Read from URL hash on load
+    function parseHash(){
+      try{
+        const hash = location.hash.replace('#','');
+        if(!hash) return null;
+        const pairs = new URLSearchParams(hash.replace(/&/g,'&'));
+        if(pairs.has('fact')){
+          const idx = parseInt(pairs.get('fact'),10);
+          const r = pairs.get('r');
+          return { idx: isNaN(idx) ? null : idx, r: r === '1' };
+        }
+      }catch(e){/* ignore */}
+      return null;
+    }
+
+    // Button handlers
+    newBtn.addEventListener('click', ()=> showFact());
+    surpriseBtn.addEventListener('click', ()=> showFact(undefined, true));
+    shareBtn.addEventListener('click', ()=>{
+      navigator.clipboard && navigator.clipboard.writeText(location.href).then(()=>{
+        shareBtn.textContent = 'Link copied!';
+        setTimeout(()=> shareBtn.textContent = 'Copy share link', 1600);
+      }).catch(()=>{
+        alert('Copy this link: ' + location.href);
+      });
+    });
+
+    // Spacebar for new fact
+    window.addEventListener('keydown', (e)=>{
+      if(e.code === 'Space'){ e.preventDefault(); showFact(); }
+    });
+
+    // On load: show hash or random
+    window.addEventListener('load', ()=>{
+      const parsed = parseHash();
+      if(parsed && parsed.idx !== null){
+        showFact(parsed.idx, parsed.r);
+      } else showFact();
+    });
+
+    // Make images load quickly with a small placeholder
+    factImg.addEventListener('error', ()=>{
+      // fallback to a generic placeholder
+      factImg.src = 'https://picsum.photos/800/600?random=1';
+    });
+
+  </script>
+</body>
+</html>
