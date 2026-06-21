@@ -49,7 +49,7 @@
     </header>
 
     <div class="image-wrap">
-      <img id="fact-img" src="https://source.unsplash.com/720x480/?nature" alt="Fact related image"/>
+      <img id="fact-img" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop" alt="Fact related image"/>
     </div>
 
     <div class="content">
@@ -64,16 +64,48 @@
   </div>
 
   <script>
-    // Facts with concise tags to request related images
+    // Facts with explicit related images so each fact shows a matching image
     const facts = [
-      { text: "Honey never spoils — archaeologists have found edible honey in ancient Egyptian tombs over 3,000 years old.", tag: "honey,ancient egypt" },
-      { text: "Octopuses have three hearts and blue blood.", tag: "octopus,marine" },
-      { text: "Bananas are berries, but strawberries aren't.", tag: "banana,fruit" },
-      { text: "There are more possible iterations of a game of chess than atoms in the known universe.", tag: "chess,board game" },
-      { text: "A day on Venus is longer than a year on Venus.", tag: "venus,space" },
-      { text: "Wombat poop is cube-shaped — this helps it not to roll away.", tag: "wombat,animal,australia" },
-      { text: "A single strand of spaghetti is called a 'spaghetto'.", tag: "spaghetti,pasta" },
-      { text: "Cleopatra lived closer in time to the Moon landing than to the Great Pyramid of Giza.", tag: "cleopatra,egypt,history" }
+      {
+        text: "Honey never spoils — archaeologists have found edible honey in ancient Egyptian tombs over 3,000 years old.",
+        tag: "honey, ancient egypt",
+        image: "https://images.unsplash.com/photo-1518972559570-9b78d4d3f3f2?q=80&w=1200&auto=format&fit=crop"
+      },
+      {
+        text: "Octopuses have three hearts and blue blood.",
+        tag: "octopus, marine",
+        image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop"
+      },
+      {
+        text: "Bananas are berries, but strawberries aren't.",
+        tag: "banana, fruit",
+        image: "https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1200&auto=format&fit=crop"
+      },
+      {
+        text: "There are more possible iterations of a game of chess than atoms in the known universe.",
+        tag: "chess, board game",
+        image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop"
+      },
+      {
+        text: "A day on Venus is longer than a year on Venus.",
+        tag: "venus, space",
+        image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1200&auto=format&fit=crop"
+      },
+      {
+        text: "Wombat poop is cube-shaped — this helps it not to roll away.",
+        tag: "wombat, animal, australia",
+        image: "https://images.unsplash.com/photo-1525253086316-d0c936c814f8?q=80&w=1200&auto=format&fit=crop"
+      },
+      {
+        text: "A single strand of spaghetti is called a 'spaghetto'.",
+        tag: "spaghetti, pasta",
+        image: "https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=1200&auto=format&fit=crop"
+      },
+      {
+        text: "Cleopatra lived closer in time to the Moon landing than to the Great Pyramid of Giza.",
+        tag: "cleopatra, egypt, history",
+        image: "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1200&auto=format&fit=crop"
+      }
     ];
 
     const factText = document.getElementById('fact-text');
@@ -95,24 +127,19 @@
         factText.style.opacity = '1';
       }, 120);
 
-      // request a related image from Unsplash using the tag keywords
-      const q = encodeURIComponent(fact.tag || fact.text.split(' ').slice(0,3).join(' '));
-      // Use a fixed size to better fit the phone canvas
-      factImg.src = `https://source.unsplash.com/720x480/?${q}`;
-      factImg.alt = fact.text.slice(0,80) + (fact.text.length>80? '...' : '');
+      // set the matching image for this fact
+      factImg.src = fact.image;
+      factImg.alt = fact.tag ? fact.tag + ' image' : fact.text.slice(0,80);
 
-      // update hash (optional)
+      // update hash so the fact is shareable
       const url = new URL(window.location.href);
       url.hash = 'fact=' + i;
       history.replaceState(null, '', url);
     }
 
     newBtn.addEventListener('click', ()=> showFact());
-
-    // spacebar also shows a new fact
     window.addEventListener('keydown', (e)=>{ if(e.code === 'Space'){ e.preventDefault(); showFact(); } });
 
-    // load initial
     window.addEventListener('load', ()=>{
       const hash = location.hash.replace('#','');
       const params = new URLSearchParams(hash);
