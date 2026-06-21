@@ -112,12 +112,20 @@
     const factImg = document.getElementById('fact-img');
     const newBtn = document.getElementById('newBtn');
 
-    function getRandomIndex(){
-      return Math.floor(Math.random() * facts.length);
-    }
+    // Show facts in order rather than randomly
+    let currentIndex = 0;
 
     function showFact(idx){
-      const i = (typeof idx === 'number') ? idx : getRandomIndex();
+      let i;
+      if (typeof idx === 'number') {
+        i = idx;
+        // next time start after the shown index
+        currentIndex = (idx + 1) % facts.length;
+      } else {
+        i = currentIndex;
+        currentIndex = (currentIndex + 1) % facts.length;
+      }
+
       const fact = facts[i];
 
       // text transition
@@ -147,6 +155,7 @@
         const idx = parseInt(params.get('fact'), 10);
         if(!isNaN(idx) && idx >=0 && idx < facts.length) return showFact(idx);
       }
+      // show the first fact in order on load
       showFact();
     });
 
