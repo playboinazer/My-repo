@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Random Facts — Colourful</title>
-  <meta name="description" content="A colorful page that shows interesting random facts with images." />
+  <title>Interesting Random Facts</title>
+  <meta name="description" content="A colorful page that shows interesting random facts with images related to each fact." />
   <style>
     :root{
       --bg1:#ff9a9e;
@@ -27,7 +27,6 @@
       padding:40px;display:flex;flex-direction:column;gap:20px;align-items:flex-start;justify-content:center;
     }
     h1{margin:0;font-size:2rem;line-height:1.05;color:#222}
-    p.lead{margin:0;color:#333;opacity:0.9}
     .fact-card{
       margin-top:8px;padding:22px;border-radius:14px;background:var(--card);width:100%;box-shadow:0 6px 18px rgba(0,0,0,0.06);display:flex;gap:18px;align-items:flex-start;transition:transform 300ms cubic-bezier(.2,.9,.3,1);
     }
@@ -47,10 +46,8 @@
     .sidebar{
       background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));padding:20px;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;min-height:100%;
     }
-    .image-wrap{width:100%;height:280px;border-radius:12px;overflow:hidden;background:#eee;display:flex;align-items:center;justify-content:center}
+    .image-wrap{width:100%;height:320px;border-radius:12px;overflow:hidden;background:#eee;display:flex;align-items:center;justify-content:center}
     .image-wrap img{width:100%;height:100%;object-fit:cover;display:block}
-    .meta{font-size:0.9rem;color:#111;opacity:0.85;text-align:center}
-    .footer{margin-top:8px;font-size:0.85rem;color:#111;opacity:0.7;text-align:center}
 
     .fade-enter{opacity:0;transform:translateY(8px)}
     .fade-enter-active{opacity:1;transform:none;transition:all 420ms cubic-bezier(.2,.9,.3,1)}
@@ -65,55 +62,47 @@
 <body>
   <div class="wrap" role="main">
     <div class="main">
-      <h1>Fun & Interesting Random Facts</h1>
-      <p class="lead">Click the button to show a new random fact — each fact has a curated image and colourful buttons to match the vibe.</p>
+      <h1>Interesting Random Facts</h1>
 
       <div id="fact" class="fact-card" aria-live="polite">
         <div class="fact-text">
           <p id="fact-text">Loading a fun fact...</p>
-          <div class="footer" id="fact-source"></div>
         </div>
       </div>
 
       <div class="controls">
         <button id="newBtn" class="btn primary">Show another fact</button>
-        <button id="surpriseBtn" class="btn secondary">Surprise me (random image)</button>
+        <button id="surpriseBtn" class="btn secondary">Surprise me (related image)</button>
         <button id="shareBtn" class="btn muted">Copy share link</button>
       </div>
-
-      <p style="margin-top:12px;font-size:0.9rem;opacity:0.85">Tip: Use the buttons or press spacebar to get a new fact.</p>
     </div>
 
     <aside class="sidebar">
       <div class="image-wrap" id="imageWrap">
         <img id="fact-img" src="https://images.unsplash.com/photo-1523978591478-c753949ff840?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Fact image"/>
       </div>
-      <div class="meta">Colorful backgrounds • Bright buttons • Responsive layout</div>
-      <div class="meta" style="font-size:0.82rem;opacity:0.8">Built for playboinazer/My-repo</div>
     </aside>
   </div>
 
   <script>
-    // Example facts array. You can extend or replace this with a JSON file or API later.
+    // Facts array with related images and optional keywords for better image matching.
     const facts = [
-      { text: "Honey never spoils — archaeologists have found edible honey in ancient Egyptian tombs over 3,000 years old.", tag: "history", image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200&auto=format&fit=crop" },
-      { text: "Octopuses have three hearts and blue blood.", tag: "nature", image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop" },
-      { text: "Bananas are berries, but strawberries aren't.", tag: "food", image: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop" },
-      { text: "There are more possible iterations of a game of chess than atoms in the known universe (it's estimated).", tag: "games", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop" },
-      { text: "A day on Venus is longer than a year on Venus — it rotates very slowly compared to its orbit around the Sun.", tag: "space", image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1200&auto=format&fit=crop" },
-      { text: "Wombat poop is cube-shaped — this helps it not to roll away when marking territory.", tag: "animals", image: "https://images.unsplash.com/photo-1535930749574-1399327ce78f?q=80&w=1200&auto=format&fit=crop" },
-      { text: "A single strand of spaghetti is called a 'spaghetto'.", tag: "language", image: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1200&auto=format&fit=crop" },
-      { text: "Cleopatra lived closer in time to the Moon landing than to the building of the Great Pyramid of Giza.", tag: "history", image: "https://images.unsplash.com/photo-1507120410856-1f35574c3b45?q=80&w=1200&auto=format&fit=crop" }
+      { text: "Honey never spoils — archaeologists have found edible honey in ancient Egyptian tombs over 3,000 years old.", tag: "honey,ancient egypt", image: "https://images.unsplash.com/photo-1518972559570-9b78d4d3f3f2?q=80&w=1200&auto=format&fit=crop" },
+      { text: "Octopuses have three hearts and blue blood.", tag: "octopus,marine animal", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop" },
+      { text: "Bananas are berries, but strawberries aren't.", tag: "banana,fruit", image: "https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1200&auto=format&fit=crop" },
+      { text: "There are more possible iterations of a game of chess than atoms in the known universe (it's estimated).", tag: "chess,game", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop" },
+      { text: "A day on Venus is longer than a year on Venus — it rotates very slowly compared to its orbit around the Sun.", tag: "venus,space,planet", image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1200&auto=format&fit=crop" },
+      { text: "Wombat poop is cube-shaped — this helps it not to roll away when marking territory.", tag: "wombat,animal,australia", image: "https://images.unsplash.com/photo-1525253086316-d0c936c814f8?q=80&w=1200&auto=format&fit=crop" },
+      { text: "A single strand of spaghetti is called a 'spaghetto'.", tag: "spaghetti,food,pasta", image: "https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=1200&auto=format&fit=crop" },
+      { text: "Cleopatra lived closer in time to the Moon landing than to the building of the Great Pyramid of Giza.", tag: "cleopatra,history,egypt", image: "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1200&auto=format&fit=crop" }
     ];
 
     const factText = document.getElementById('fact-text');
     const factImg = document.getElementById('fact-img');
-    const factSource = document.getElementById('fact-source');
     const newBtn = document.getElementById('newBtn');
     const surpriseBtn = document.getElementById('surpriseBtn');
     const shareBtn = document.getElementById('shareBtn');
 
-    // Utility: pick index based on optional seed (to support link sharing later)
     function getRandomIndex(seed) {
       if (typeof seed === 'number') return seed % facts.length;
       return Math.floor(Math.random() * facts.length);
@@ -122,32 +111,29 @@
     function showFact(idx, useRandomImage=false){
       const i = (typeof idx === 'number') ? idx : getRandomIndex();
       const fact = facts[i];
-      // fade-out, change, fade-in
+
       factText.classList.add('fade-enter');
       setTimeout(()=>{
         factText.textContent = fact.text;
-        factSource.textContent = fact.tag ? 'Tag: ' + fact.tag : '';
-        // choose image: either the fact's image or a surprise image
+        // choose image: prefer the curated fact image so it's related
         if(useRandomImage){
-          // get a random Unsplash image based on the tag or a general query
-          const query = encodeURIComponent(fact.tag || 'abstract');
-          factImg.src = `https://source.unsplash.com/collection/190727/${800}x${600}?${query}`; // collection for stable abstract images
+          // request a related random image from Unsplash using tags/keywords
+          const q = encodeURIComponent(fact.tag || fact.text.split(' ').slice(0,3).join(' '));
+          factImg.src = `https://source.unsplash.com/1200x800/?${q}`;
         } else {
-          factImg.src = fact.image + '&s=1';
+          factImg.src = fact.image;
         }
-        // ensure alt text is helpful
-        factImg.alt = (fact.tag ? fact.tag + ' image' : 'Illustration');
-        // animate back in
+        // make alt text descriptive
+        factImg.alt = fact.text.slice(0,80) + (fact.text.length>80? '...':'');
         requestAnimationFrame(()=>factText.classList.remove('fade-enter'));
-      }, 160);
+      }, 120);
 
-      // update URL hash so sharing works
+      // update URL hash for sharing
       const url = new URL(window.location.href);
       url.hash = 'fact=' + i + (useRandomImage ? '&r=1' : '');
       history.replaceState(null, '', url);
     }
 
-    // Read from URL hash on load
     function parseHash(){
       try{
         const hash = location.hash.replace('#','');
@@ -162,7 +148,6 @@
       return null;
     }
 
-    // Button handlers
     newBtn.addEventListener('click', ()=> showFact());
     surpriseBtn.addEventListener('click', ()=> showFact(undefined, true));
     shareBtn.addEventListener('click', ()=>{
@@ -174,12 +159,10 @@
       });
     });
 
-    // Spacebar for new fact
     window.addEventListener('keydown', (e)=>{
       if(e.code === 'Space'){ e.preventDefault(); showFact(); }
     });
 
-    // On load: show hash or random
     window.addEventListener('load', ()=>{
       const parsed = parseHash();
       if(parsed && parsed.idx !== null){
@@ -187,10 +170,8 @@
       } else showFact();
     });
 
-    // Make images load quickly with a small placeholder
     factImg.addEventListener('error', ()=>{
-      // fallback to a generic placeholder
-      factImg.src = 'https://picsum.photos/800/600?random=1';
+      factImg.src = 'https://picsum.photos/1200/800?random=1';
     });
 
   </script>
